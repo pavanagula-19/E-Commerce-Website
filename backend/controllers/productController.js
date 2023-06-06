@@ -34,6 +34,7 @@ exports.updateProduct = catchAsyncError(async(req,res,next)=>{
             message:"Products Not Found"
         })
     }
+    
     product = await Product.findByIdAndUpdate(req.params.id, req.body,{
        new:true,
        runValidators:true,
