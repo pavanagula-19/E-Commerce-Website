@@ -1,22 +1,35 @@
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const app = require("./app");
-const dotenv = require('dotenv');
-const connectDatabase = require("./config/database");
 
-//config 
-dotenv.config({path: "backend/config/.env"});
+// Config
+dotenv.config({ path: "backend/config/.env" });
 
-//connect to database
-connectDatabase();
+// Connect to the database
+const connectDatabase = require("./config/database")
+connectDatabase()
 
-const server = app.listen(process.env.PORT, () => {
-    console.log(`Server is working on http://localhost:${process.env.PORT}`);
+// Unhandled Promise Rejection
+process.on("unhandledRejection", (err) => {
+  console.log(`Error, ${err.message}`);
+  console.log("shutting down server due to unhandled promise rejection");
+  server.close(() => {
+    process.exit(1);
   });
+});
 
-  //Unhandle Promise Rejection 
-  process.on("unhandledRejection", err=>{
-    console.log(`Error, ${err.message}`);
-    console.log("shutting down server due to unhandled promise rejection");
-    server.close(()=>{
-      process.exit(1);
-    })
-  })
+const PORT = process.env.PORT;
+
+const startServer = async () => {
+  try {
+
+    // Start the server
+    const server = app.listen(PORT, () => {
+      console.log(`Server is working on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("Error starting server:", err);
+  }
+};
+
+startServer();
