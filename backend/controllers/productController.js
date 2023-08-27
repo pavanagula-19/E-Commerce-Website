@@ -64,16 +64,19 @@ exports.deleteProduct = catchAsyncError(async(req, res, next)=>{
 });
 
 
-//Get Product details
-exports.getProductDetails = catchAsyncError(async(req, res, next)=>{
+// Get Product Details
+exports.getProductDetails = catchAsyncError(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
-
-    if(!product){
-        return next(new ErrorHander())
+  
+    if (!product) {
+      return next(new ErrorHander("Product not found", 404));
     }
+  
     res.status(200).json({
-        success:true,
-        product,
-        productCount
+      success: true,
+      product,
+      productCount, 
     });
-});
+  });
+
+
